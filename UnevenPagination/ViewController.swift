@@ -17,7 +17,7 @@ class ViewController: UIViewController {
     
     @IBOutlet private weak var collectionView: UICollectionView!
     
-    private var currentIndex: Int = 0
+    private var lastTargetContentOffsetX: CGFloat = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,6 +99,13 @@ extension ViewController: UIScrollViewDelegate {
         } else {
             targetContentOffset.pointee.x = rightItemX
         }
+        
+        // To fix choppiness on small quick swipes
+        if velocity.x != 0 && lastTargetContentOffsetX == targetContentOffset.pointee.x {
+            scrollView.setContentOffset(targetContentOffset.pointee, animated: true)
+        }
+        
+        lastTargetContentOffsetX = targetContentOffset.pointee.x
     }
 }
 
